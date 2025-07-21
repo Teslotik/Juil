@@ -1,0 +1,14 @@
+{
+  "name": "juil",
+  "url" : "https://github.com/Teslotik/Juil",
+  "license": "MIT",
+  "tags": ["ui", "gui", "cross", "components", "layout", "controls", "frontend", "widgets"],
+  "description": "Lightweight, simple to use GUI solving engine for your game/application",
+  "version": "0.0.1",
+  "classPath": "source/",
+  "releasenote": "Alpha release.",
+  "contributors": ["Teslotik"],
+  "dependencies": {
+    "utest": "1.13.2"
+  }
+}

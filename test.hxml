@@ -1,0 +1,8 @@
+-cp source
+-cp test
+
+-lib utest
+
+-main TestMain
+
+--interp
