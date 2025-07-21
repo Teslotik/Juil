@@ -175,10 +175,6 @@ class Context {
         return Utils.clamp(h + insetsVertical, min, max);
     }
 
-    inline public function getContentHeight(min:Null<Float>, max:Null<Float>) {
-        return Utils.clamp(h - insetsVertical, min, max);
-    }
-
     inline public function getMaxWidth() {
         var w = 0.0;
         for (widget in iterator()) {
