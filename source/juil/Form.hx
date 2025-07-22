@@ -1,5 +1,6 @@
 package juil;
 
+import juil.struct.Area;
 import juil.struct.Widget;
 import juil.types.Resizing;
 
@@ -11,20 +12,19 @@ class Form {
 
     public var children = new Map<Widget, Array<Widget>>();
 
-    public var onClick:Widget->Void = null;
-    public var onDrag:Widget->Void = null;
-    public var onUpdate:Widget->Void = null;
+    public var onInput:Widget->Void = null;
 
     var root:Widget = null;
 
     var context = new Context();
 
-    public static function CreateWidget(?build:Widget->Void):Widget {
+    public static function CreateWidget(?build:Widget->Void, input = false):Widget {
         var widget:Widget = {
             x: 0,
             y: 0,
             w: 0,
             h: 0,
+            area: input ? new Area() : null,
             isEnable: true,
             // order: 0,
             pivotX: 0.0,
@@ -69,8 +69,8 @@ class Form {
         calcPosition(root);
     }
 
-    public function input() {
-        
+    public function input(x:Float, y:Float, isDown:Bool) {
+        calcArea(root, x, y, isDown);
     }
 
     public function addWidget(widget:Widget, ?parent:Widget) {
@@ -83,6 +83,34 @@ class Form {
             children.get(parent).push(widget);
         }
         return true;
+    }
+
+    function calcArea(widget:Widget, x:Float, y:Float, isDown:Bool) {
+        if (!widget.isEnable)
+            return false;
+        var children = children.get(widget);
+        
+        if (children != null) {
+            for (i in 0...children.length) {
+                var child = children[children.length - i - 1];
+                if (calcArea(child, x, y, isDown)) {
+                    return true;
+                }
+            }
+        }
+
+        if (widget.area != null) {
+            widget.area.x = widget.x;
+            widget.area.y = widget.y;
+            widget.area.w = widget.w;
+            widget.area.h = widget.h;
+            widget.area.update(x, y, isDown);
+            if (onInput != null && widget.area.isPressed || widget.area.isReleased || widget.area.isDragStarted || widget.area.isDropped) 
+                onInput(widget);
+            return widget.area.isOver || widget.area.isDragging;
+        }
+        
+        return false;
     }
 
     function calcAspect(widget:Widget) {

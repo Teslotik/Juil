@@ -1,5 +1,6 @@
 package juil.struct;
 
+import juil.struct.Area;
 import juil.types.Anchor;
 import juil.types.Direction;
 import juil.types.Gap;
@@ -11,6 +12,8 @@ typedef Widget = {
     y:Float,
     w:Float,
     h:Float,
+
+    area:Area,
 
     isEnable:Bool,
     // order:Int,

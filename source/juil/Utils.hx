@@ -73,4 +73,9 @@ class Utils {
         if (setLeft != null) setLeft(l);
         if (setRight != null) setRight(r);
     }
+
+    public static function set(v:{x:Float, y:Float}, x:Float, y:Float) {
+        v.x = x;
+        v.y = y;
+    }
 }

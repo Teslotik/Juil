@@ -1,5 +1,6 @@
 package;
 
+import juil.Utils;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -32,6 +33,7 @@ class PlayState extends FlxState {
             widget.horizontal = Fixed(100);
             widget.vertical = Fixed(40);
             widget.minW = 50;
+            widget.minH = 100;
         });
         minimalLayout.widget2 = Form.CreateWidget(widget -> {
             widget.horizontal = Fixed(40);
@@ -90,6 +92,7 @@ class PlayState extends FlxState {
             widget.wrap = true;
             widget.padding = All(5);
             widget.minW = 50;
+            widget.minH = 100;
         });
         demo1.widget2 = Form.CreateWidget(widget -> {
             widget.horizontal = Fixed(40);
@@ -160,6 +163,7 @@ class PlayState extends FlxState {
             widget.wrap = true;
             widget.padding = All(5);
             widget.minW = 50;
+            widget.minH = 100;
         });
         demo2.widget2 = Form.CreateWidget(widget -> {
             widget.horizontal = Fixed(40);
@@ -240,6 +244,7 @@ class PlayState extends FlxState {
             widget.padding = All(5);
             widget.hgap = Fixed(5);
             widget.minW = 50;
+            widget.minH = 100;
         });
         demo3.widget2 = Form.CreateWidget(widget -> {
             widget.horizontal = Fill;
@@ -287,6 +292,67 @@ class PlayState extends FlxState {
     }
 
     // --------------------------------------------------------------------------------
+    // Input Demo
+    // --------------------------------------------------------------------------------
+
+    var inputDemo = {
+        form: null,
+        widget1: null,
+        widget2: null,
+        sprite1: null,
+        sprite2: null,
+        animation: 0.0
+    }
+
+    function createInputDemo() {
+        inputDemo.sprite1 = createSprite(0, 0, 10, 10, FlxColor.RED);
+        inputDemo.sprite2 = createSprite(0, 0, 10, 10, FlxColor.GREEN);
+
+        inputDemo.widget1 = Form.CreateWidget(widget -> {
+            widget.horizontal = Fixed(100);
+            widget.vertical = Fixed(100);
+            widget.x = 10;
+            widget.y = 400;
+            widget.direction = Stack;
+            widget.padding = All(15);
+        });
+        inputDemo.widget2 = Form.CreateWidget(widget -> {
+            widget.horizontal = Fill;
+            widget.vertical = Fill;
+        }, true);   // Receive input
+        
+        inputDemo.form = new Form(inputDemo.widget1);
+
+        inputDemo.form.addWidget(inputDemo.widget1);
+        inputDemo.form.addWidget(inputDemo.widget2, inputDemo.widget1);
+
+        // React on input
+        inputDemo.form.onInput = widget -> {
+            if (widget.area.isReleased && !widget.area.isDropped) {
+                inputDemo.animation = 3;
+            }
+        };
+    }
+
+    public function updateInputDemo() {
+        // Animate if pressed
+        inputDemo.widget1.x += Math.sin(inputDemo.animation * 2 * Math.PI) * 5;
+
+        inputDemo.form.update();
+        inputDemo.form.input(FlxG.mouse.x, FlxG.mouse.y, FlxG.mouse.pressed);
+        inputDemo.animation = Math.max(inputDemo.animation - 0.1, 0.0);
+
+        transform(inputDemo.sprite1, inputDemo.widget1.x, inputDemo.widget1.y, inputDemo.widget1.w, inputDemo.widget1.h);
+        transform(inputDemo.sprite2, inputDemo.widget2.x, inputDemo.widget2.y, inputDemo.widget2.w, inputDemo.widget2.h);
+
+        // Access clickable area to grab widget
+        if (inputDemo.widget2.area.isDragging) {
+            inputDemo.widget1.x += inputDemo.widget2.area.mouseDelta.x;
+            inputDemo.widget1.y += inputDemo.widget2.area.mouseDelta.y;
+        }
+    }
+
+    // --------------------------------------------------------------------------------
 
     override public function create() {
         super.create();
@@ -295,6 +361,7 @@ class PlayState extends FlxState {
         createDemo1();
         createDemo2();
         createDemo3();
+        createInputDemo();
     }
 
     override public function update(elapsed:Float) {
@@ -304,6 +371,7 @@ class PlayState extends FlxState {
         updateDemo1();
         updateDemo2();
         updateDemo3();
+        updateInputDemo();
     }
 
     function resize(widget:Widget) {

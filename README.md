@@ -14,7 +14,7 @@ _Rendering backend is not supplied and not planned._
 
 2. You can think it as a Figma Auto Layout + constraints.
 
-3. Rich properties.
+3. Rich properties:
 
 - `size` and `position` info
 
@@ -82,6 +82,45 @@ override public function update(elapsed:Float) {
     // Update the form
     form.update();
 }
+```
+
+5. Receive input and react:
+
+- Set input argument to true
+
+```haxe
+Form.CreateWidget(widget -> {
+    widget.x = 10;
+    widget.y = 10;
+    ...
+}, true);   // <-- this one
+```
+
+- Use either form attribute `onInput`
+
+```haxe
+form.onInput = widget -> {
+    if (widget.area.isReleased && !widget.area.isDropped) {
+        trace("clicked!");
+    }
+};
+```
+
+- ... or the `area` attribute directly from widget 
+
+```haxe
+if (widget.area.isDragging) {
+    widget.x += widget.area.mouseDelta.x;
+    widget.y += widget.area.mouseDelta.y;
+}
+```
+
+6. Update your renderer
+
+For HaxeFlixel:
+
+```haxe
+sprite.setPosition(widget.x + widget.w / 2.0, widget.y + widget.h / 2.0);
 ```
 
 ## Screenshots
